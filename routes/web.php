@@ -13,10 +13,19 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderWizardController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\PricingController;
+use App\Http\Controllers\SeamediaController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\XenditWebhookController;
 use Illuminate\Support\Facades\Route;
+
+// ---- Landing kolaborasi SEAMEDIA × CONWEB ----
+// Produksi: subdomain conwebseamedia.conweb.id menampilkan landing ini di root "/".
+Route::domain('conwebseamedia.conweb.id')->group(function () {
+    Route::get('/', [SeamediaController::class, 'index'])->name('seamedia.home');
+});
+// Preview/akses path (lokal & fallback): /seamedia
+Route::get('/seamedia', [SeamediaController::class, 'index'])->name('seamedia.index');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
