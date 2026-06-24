@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ContentSeeder::class,
             Phase2Seeder::class,
+            SeamediaSeeder::class,
         ]);
     }
 }
