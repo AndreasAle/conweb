@@ -11,6 +11,9 @@
   @php
     $wa = $set('contact_wa', 'https://wa.me/6281234567890');
     $email = $set('contact_email', 'seamediaindonesia@gmail.com');
+    $logoS = $set('logo');
+    $logoC = $set('logo_conweb');
+    $hasLogo = $logoS || $logoC;
     $svcIcons = [
       'web'=>'<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="8" x2="22" y2="8"/><line x1="8" y1="21" x2="16" y2="21"/>',
       'cart'=>'<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>',
@@ -69,6 +72,11 @@
     .brand .mk{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--grad);color:#fff;flex-shrink:0;box-shadow:0 8px 18px rgba(13,148,136,.3)}
     .brand .mk svg{width:23px;height:23px}
     .brand .tx b:first-child{color:var(--teal-d)}.brand .tx b:last-child{color:var(--blue-d)}
+    .brand-logos{display:flex;align-items:center;gap:12px}
+    .brand-logos img{height:38px;width:auto;display:block}
+    .brand-logos .sep{width:1px;height:26px;background:var(--line-2)}
+    footer .brand-logos img{height:34px;background:#fff;border-radius:8px;padding:5px}
+    footer .brand-logos .sep{background:rgba(255,255,255,.25)}
     .nav-links{display:flex;align-items:center;gap:26px}
     .nav-links a{font-size:14px;font-weight:500;color:var(--ink-2);position:relative;transition:var(--t)}
     .nav-links a::after{content:"";position:absolute;left:0;bottom:-5px;height:2px;width:0;background:var(--grad);border-radius:2px;transition:var(--t)}
@@ -225,8 +233,16 @@
   <nav class="nav" id="nav">
     <div class="wrap nav-in">
       <a href="#top" class="brand">
+        @if($hasLogo)
+        <span class="brand-logos">
+          @if($logoS)<img src="{{ asset('storage/'.$logoS) }}" alt="Seamedia">@endif
+          @if($logoS && $logoC)<span class="sep"></span>@endif
+          @if($logoC)<img src="{{ asset('storage/'.$logoC) }}" alt="ConWeb">@endif
+        </span>
+        @else
         <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15c2.5-2 5-2 7.5 0s5 2 7.5 0"/><path d="M3 10c2.5-2 5-2 7.5 0s5 2 7.5 0"/><circle cx="18.5" cy="6" r="1.6" fill="currentColor"/></svg></span>
         <span class="tx"><b>Seamedia</b> <b>ConWeb</b></span>
+        @endif
       </a>
       <div class="nav-links">
         <a href="#kolaborasi">Kolaborasi</a><a href="#layanan">Layanan</a><a href="#showcase">Lihat Website</a><a href="#paket">Paket</a><a href="#kontak">Kontak</a>
@@ -505,7 +521,17 @@
     <div class="wrap">
       <div class="foot-grid">
         <div class="foot-brand">
-          <a href="#top" class="brand"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15c2.5-2 5-2 7.5 0s5 2 7.5 0"/><path d="M3 10c2.5-2 5-2 7.5 0s5 2 7.5 0"/><circle cx="18.5" cy="6" r="1.6" fill="currentColor"/></svg></span><span class="tx"><b>Seamedia</b> <b>ConWeb</b></span></a>
+          <a href="#top" class="brand">
+            @if($hasLogo)
+            <span class="brand-logos">
+              @if($logoS)<img src="{{ asset('storage/'.$logoS) }}" alt="Seamedia">@endif
+              @if($logoS && $logoC)<span class="sep"></span>@endif
+              @if($logoC)<img src="{{ asset('storage/'.$logoC) }}" alt="ConWeb">@endif
+            </span>
+            @else
+            <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15c2.5-2 5-2 7.5 0s5 2 7.5 0"/><path d="M3 10c2.5-2 5-2 7.5 0s5 2 7.5 0"/><circle cx="18.5" cy="6" r="1.6" fill="currentColor"/></svg></span><span class="tx"><b>Seamedia</b> <b>ConWeb</b></span>
+            @endif
+          </a>
           <p>Conversion Web — social media bawa perhatian, website bangun kepercayaan. Partner digital untuk UMKM & local brand.</p>
         </div>
         <div class="foot-col"><h4>Navigasi</h4><a href="#kolaborasi">Kolaborasi</a><a href="#layanan">Layanan</a><a href="#showcase">Lihat Website</a><a href="#paket">Paket</a></div>

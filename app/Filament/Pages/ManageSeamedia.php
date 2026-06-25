@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -37,6 +38,10 @@ class ManageSeamedia extends Page implements HasForms
         $t = fn ($key, $label, $type = 'text') => compact('key', 'label', 'type');
 
         return [
+            'Brand & Logo' => [
+                $t('seamedia.logo', 'Logo Seamedia (gambar)', 'image'),
+                $t('seamedia.logo_conweb', 'Logo ConWeb (gambar)', 'image'),
+            ],
             'Hero' => [
                 $t('seamedia.hero_eyebrow', 'Eyebrow (label kecil atas)'),
                 $t('seamedia.hero_title', 'Judul Hero', 'area'),
@@ -83,9 +88,11 @@ class ManageSeamedia extends Page implements HasForms
             $components = [];
             foreach ($fields as $f) {
                 $name = self::k($f['key']);
-                $components[] = $f['type'] === 'area'
-                    ? Textarea::make($name)->label($f['label'])->rows(2)
-                    : TextInput::make($name)->label($f['label']);
+                $components[] = match ($f['type']) {
+                    'area' => Textarea::make($name)->label($f['label'])->rows(2),
+                    'image' => FileUpload::make($name)->label($f['label'])->image()->directory('seamedia')->imageEditor(),
+                    default => TextInput::make($name)->label($f['label']),
+                };
             }
             $tabs[] = Tabs\Tab::make($label)->schema($components);
         }
