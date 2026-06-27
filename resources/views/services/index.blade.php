@@ -2,7 +2,8 @@
 
 @php $en = site_locale() === 'en'; @endphp
 
-@section('title', ($en ? 'Services' : 'Layanan').' — '.$brand.' '.$suffix)
+@section('title', ($en ? 'Web, App & Custom System Services — '.$brand.' '.$suffix : 'Layanan Jasa Pembuatan Website, Aplikasi & Sistem Custom — '.$brand.' '.$suffix))
+@section('description', $en ? 'ConWeb ID services: website development, web & mobile apps, custom systems, and AI automation for businesses, startups, and SMEs in Indonesia.' : 'Layanan ConWeb ID: jasa pembuatan website, aplikasi web & mobile, sistem custom, dashboard, dan otomatisasi AI untuk UMKM, startup, dan bisnis di Indonesia.')
 
 @section('content')
   <section class="page-hero">

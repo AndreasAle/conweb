@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             ContentSeeder::class,
             Phase2Seeder::class,
             SeamediaSeeder::class,
+            SeoBlogSeeder::class,
         ]);
     }
 }

@@ -5,7 +5,8 @@ $en = site_locale() === 'en';
 $cats = $portfolio->map(fn($p) => t($p, 'category'))->filter()->unique()->values();
 @endphp
 
-@section('title', ($en ? 'Portfolio' : 'Portofolio').' — '.$brand.' '.$suffix)
+@section('title', ($en ? 'Portfolio — Websites & Apps We Built — '.$brand.' '.$suffix : 'Portofolio Website & Aplikasi — '.$brand.' '.$suffix))
+@section('description', $en ? 'See websites, apps, and custom systems built by ConWeb ID for real businesses across Indonesia.' : 'Lihat portofolio website, aplikasi, dan sistem custom buatan ConWeb ID untuk berbagai bisnis di Indonesia.')
 
 @section('content')
   <section class="page-hero">

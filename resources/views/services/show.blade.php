@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', t($service, 'title').' — '.$brand.' '.$suffix)
+@section('description', \Illuminate\Support\Str::limit(strip_tags(t($service, 'hero_subtitle') ?: t($service, 'desc') ?: ''), 155))
 
 @section('content')
   <section class="page-hero">

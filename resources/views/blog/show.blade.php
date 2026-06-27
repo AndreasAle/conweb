@@ -14,6 +14,29 @@
 @section('title', t($post, 'title').' — '.$brand.' '.$suffix)
 @section('description', t($post, 'excerpt'))
 
+@push('head')
+@php
+  $brandFull = $brand.' '.$suffix;
+  $articleLd = ['@context' => 'https://schema.org', '@type' => 'Article',
+    'headline' => t($post, 'title'),
+    'description' => strip_tags(t($post, 'excerpt')),
+    'image' => $post->cover_image ? asset('storage/'.$post->cover_image) : ($s['site.logo'] ?? null ? asset('storage/'.$s['site.logo']) : null),
+    'datePublished' => $post->published_at?->toAtomString(),
+    'dateModified' => ($post->updated_at ?? $post->published_at)?->toAtomString(),
+    'author' => ['@type' => 'Person', 'name' => $post->author ?: $brandFull],
+    'publisher' => ['@type' => 'Organization', 'name' => $brandFull, 'logo' => ['@type' => 'ImageObject', 'url' => ! empty($s['site.logo']) ? asset('storage/'.$s['site.logo']) : url('/favicon.ico')]],
+    'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => $url],
+  ];
+  $crumbLd = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => url('/')],
+    ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('blog.index')],
+    ['@type' => 'ListItem', 'position' => 3, 'name' => t($post, 'title'), 'item' => $url],
+  ]];
+@endphp
+<script type="application/ld+json">{!! json_encode($articleLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+<script type="application/ld+json">{!! json_encode($crumbLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
+
 @push('styles')
 <style>
   .reading-bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:200;background:linear-gradient(90deg,var(--brand),var(--sky));transition:width .1s linear}
@@ -88,7 +111,7 @@
 
     @if($post->cover_image)
     <figure class="article-cover reveal">
-      <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ t($post, 'title') }}">
+      <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ t($post, 'title') }}" decoding="async">
     </figure>
     @endif
 

@@ -6,7 +6,8 @@ $featured = $posts->first();
 $rest = $posts->slice(1);
 @endphp
 
-@section('title', 'Blog — '.$brand.' '.$suffix)
+@section('title', ($en ? 'Blog — Digital Growth Tips — '.$brand.' '.$suffix : 'Blog & Tips Digital untuk Bisnis — '.$brand.' '.$suffix))
+@section('description', $en ? 'Insights, tips, and trends on websites, digitalization, and online business growth from ConWeb ID.' : 'Wawasan, tips, dan tren seputar website, digitalisasi, dan pertumbuhan bisnis online dari ConWeb ID.')
 
 @push('styles')
 <style>

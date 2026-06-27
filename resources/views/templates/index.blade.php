@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', (site_locale() === 'en' ? 'Website Templates' : 'Template Website').' — '.$brand.' '.$suffix)
+@section('title', (site_locale() === 'en' ? 'Ready-Made Website Templates for Business — '.$brand.' '.$suffix : 'Template Website Siap Pakai untuk UMKM & Bisnis — '.$brand.' '.$suffix))
+@section('description', site_locale() === 'en' ? 'Browse professional, ready-to-use website templates for SMEs and brands. Pick a design and launch fast with ConWeb ID.' : 'Pilih template website profesional siap pakai untuk UMKM & brand. Tinggal pilih desain dan tayang cepat bersama ConWeb ID.')
 
 @section('content')
   <section class="page-hero">

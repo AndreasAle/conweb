@@ -2,7 +2,19 @@
 
 @php $en = site_locale() === 'en'; @endphp
 
-@section('title', 'FAQ — '.$brand.' '.$suffix)
+@section('title', ($en ? 'FAQ — Questions About Our Web Services — '.$brand.' '.$suffix : 'FAQ — Pertanyaan Seputar Jasa Website — '.$brand.' '.$suffix))
+@section('description', $en ? 'Frequently asked questions about ConWeb ID website, app, and custom system services, pricing, and process.' : 'Pertanyaan yang sering diajukan seputar jasa pembuatan website, aplikasi, harga, dan proses kerja ConWeb ID.')
+
+@push('head')
+@php
+  $faqLd = ['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $faqs->map(fn ($fq) => [
+    '@type' => 'Question',
+    'name' => strip_tags(t($fq, 'question')),
+    'acceptedAnswer' => ['@type' => 'Answer', 'text' => strip_tags(t($fq, 'answer'))],
+  ])->values()->all()];
+@endphp
+<script type="application/ld+json">{!! json_encode($faqLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush
 
 @push('styles')
 <style>

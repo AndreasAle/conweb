@@ -2,7 +2,8 @@
 
 @php $en = site_locale() === 'en'; @endphp
 
-@section('title', ($en ? 'Community' : 'Komunitas').' — '.$brand.' '.$suffix)
+@section('title', ($en ? 'Community for Business Owners — '.$brand.' '.$suffix : 'Komunitas Pelaku Usaha Digital — '.$brand.' '.$suffix))
+@section('description', $en ? 'Join the ConWeb ID community: discussions, free classes, and exclusive promos for business owners growing online.' : 'Gabung komunitas ConWeb ID: diskusi, kelas gratis, dan promo eksklusif untuk pelaku usaha yang ingin tumbuh secara digital.')
 
 @section('content')
   <section class="page-hero">

@@ -13,7 +13,8 @@ $addons = [
 ];
 @endphp
 
-@section('title', ($en ? 'Pricing' : 'Paket & Harga').' — '.$brand.' '.$suffix)
+@section('title', ($en ? 'Website Pricing & Packages — '.$brand.' '.$suffix : 'Paket & Harga Pembuatan Website — '.$brand.' '.$suffix))
+@section('description', $en ? 'Transparent website pricing from ConWeb ID. Domain, hosting, SSL, and a fully built website in one package. No hidden fees.' : 'Harga pembuatan website transparan dari ConWeb ID. Domain, hosting, SSL, dan website jadi dalam satu paket. Tanpa biaya tersembunyi.')
 
 @section('content')
   <section class="page-hero">
