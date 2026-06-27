@@ -27,6 +27,8 @@ Route::domain('conwebseamedia.conweb.id')->group(function () {
 // Preview/akses path (lokal & fallback): /seamedia
 Route::get('/seamedia', [SeamediaController::class, 'index'])->name('seamedia.index');
 
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/template', [TemplateController::class, 'index'])->name('templates.index');

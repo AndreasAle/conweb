@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', $s['site.title'] ?? 'ConWeb ID')
-@section('description', $s['site.description'] ?? '')
+@section('title', $s['site.title'] ?? 'ConWeb ID — Jasa Pembuatan Website, Aplikasi & Sistem Custom')
+@section('description', $s['site.description'] ?? 'ConWeb ID membantu UMKM, startup, dan bisnis membuat website, landing page, aplikasi, dashboard, sistem custom, dan otomatisasi digital profesional.')
 
 @push('styles')
 <style>

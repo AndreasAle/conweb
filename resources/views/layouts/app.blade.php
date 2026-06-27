@@ -3,13 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@yield('title', $s['site.title'] ?? 'ConWeb ID')</title>
-  <meta name="description" content="@yield('description', $s['site.description'] ?? '')">
+  @php
+    $seoDescDefault = $s['site.description'] ?? 'ConWeb ID membantu UMKM, startup, dan bisnis membuat website, landing page, aplikasi, dashboard, sistem custom, dan otomatisasi digital profesional.';
+    $seoTitleDefault = $s['site.title'] ?? 'ConWeb ID — Jasa Pembuatan Website, Aplikasi & Sistem Custom';
+    $seoUrl = url()->current();
+    $seoImage = ! empty($s['site.logo']) ? asset('storage/'.$s['site.logo']) : (! empty($s['site.favicon']) ? asset('storage/'.$s['site.favicon']) : url('/favicon.ico'));
+    $brandName = ($s['brand.name'] ?? 'ConWeb').' '.($s['brand.suffix'] ?? 'ID');
+    $siteEmail = $s['site.email'] ?? 'hello@conweb.id';
+    $ldOrg = json_encode(['@context' => 'https://schema.org', '@type' => 'Organization', 'name' => $brandName, 'url' => url('/'), 'logo' => $seoImage, 'email' => $siteEmail, 'description' => $seoDescDefault], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $ldSite = json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => $brandName, 'url' => url('/')], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  @endphp
+  <title>@yield('title', $seoTitleDefault)</title>
+  <meta name="description" content="@yield('description', $seoDescDefault)">
   <meta name="robots" content="index, follow">
-  @if(!empty($s['site.favicon']))
+  <link rel="canonical" href="{{ $seoUrl }}">
+  @if(! empty($s['site.favicon']))
   <link rel="icon" href="{{ asset('storage/'.$s['site.favicon']) }}" sizes="any">
   <link rel="apple-touch-icon" href="{{ asset('storage/'.$s['site.favicon']) }}">
   @endif
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ $brandName }}">
+  <meta property="og:title" content="@yield('title', $seoTitleDefault)">
+  <meta property="og:description" content="@yield('description', $seoDescDefault)">
+  <meta property="og:url" content="{{ $seoUrl }}">
+  <meta property="og:image" content="{{ $seoImage }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="@yield('title', $seoTitleDefault)">
+  <meta name="twitter:description" content="@yield('description', $seoDescDefault)">
+  <meta name="twitter:image" content="{{ $seoImage }}">
+
+  <script type="application/ld+json">{!! $ldOrg !!}</script>
+  <script type="application/ld+json">{!! $ldSite !!}</script>
+  @stack('head')
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>

@@ -1,2 +1,11 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Disallow: /admin
+Disallow: /akun
+Disallow: /order
+Disallow: /masuk
+Disallow: /daftar
+Disallow: /verifikasi
+
+Sitemap: https://conweb.id/sitemap.xml
