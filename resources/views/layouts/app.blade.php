@@ -6,7 +6,9 @@
   @php
     $seoDescDefault = $s['site.description'] ?? 'ConWeb ID membantu UMKM, startup, dan bisnis membuat website, landing page, aplikasi, dashboard, sistem custom, dan otomatisasi digital profesional.';
     $seoTitleDefault = $s['site.title'] ?? 'ConWeb ID — Jasa Pembuatan Website, Aplikasi & Sistem Custom';
-    $seoUrl = url()->current();
+    $canonicalBase = rtrim(config('app.url', url('/')), '/');
+    $reqPath = request()->path();
+    $seoUrl = $canonicalBase.($reqPath === '/' ? '/' : '/'.$reqPath);
     $seoImage = ! empty($s['site.logo']) ? asset('storage/'.$s['site.logo']) : (! empty($s['site.favicon']) ? asset('storage/'.$s['site.favicon']) : url('/favicon.ico'));
     $brandName = ($s['brand.name'] ?? 'ConWeb').' '.($s['brand.suffix'] ?? 'ID');
     $siteEmail = $s['site.email'] ?? 'hello@conweb.id';
