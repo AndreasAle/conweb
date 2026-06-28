@@ -41,6 +41,7 @@ class ManageSeamedia extends Page implements HasForms
             'Brand & Logo' => [
                 $t('seamedia.logo', 'Logo Seamedia (gambar)', 'image'),
                 $t('seamedia.logo_conweb', 'Logo ConWeb (gambar)', 'image'),
+                $t('seamedia.favicon', 'Favicon (.ico / .png, persegi)', 'image'),
             ],
             'Hero' => [
                 $t('seamedia.hero_eyebrow', 'Eyebrow (label kecil atas)'),

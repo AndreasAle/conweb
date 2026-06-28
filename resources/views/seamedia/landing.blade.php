@@ -6,6 +6,10 @@
   <title>Seamedia ConWeb — Conversion Web Partner untuk UMKM & Local Brand</title>
   <meta name="description" content="Seamedia ConWeb: social media membawa perhatian, website membangun kepercayaan. Partner pembuatan website profesional, katalog, & funnel order WhatsApp untuk UMKM dan local brand.">
   <meta name="robots" content="index, follow">
+  @if($set('favicon'))
+  <link rel="icon" href="{{ asset('storage/'.$set('favicon')) }}" sizes="any">
+  <link rel="apple-touch-icon" href="{{ asset('storage/'.$set('favicon')) }}">
+  @endif
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   @php
