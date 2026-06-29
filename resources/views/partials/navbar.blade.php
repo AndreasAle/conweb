@@ -4,6 +4,7 @@
         ['route' => 'templates.index', 'label_id' => 'Template', 'label_en' => 'Templates'],
         ['route' => 'services.index', 'label_id' => 'Layanan', 'label_en' => 'Services'],
         ['route' => 'pricing.index', 'label_id' => 'Paket', 'label_en' => 'Pricing'],
+        ['route' => 'ecommerce.index', 'label_id' => 'Toko Online', 'label_en' => 'Online Store'],
         ['route' => 'portfolio.index', 'label_id' => 'Portofolio', 'label_en' => 'Portfolio'],
         ['route' => 'community.index', 'label_id' => 'Komunitas', 'label_en' => 'Community'],
         ['route' => 'blog.index', 'label_id' => 'Blog', 'label_en' => 'Blog'],

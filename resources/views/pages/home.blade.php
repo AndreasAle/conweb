@@ -484,6 +484,54 @@
     </div>
   </section>
 
+  <!-- E-COMMERCE BY CONWEB -->
+  <section class="section services" id="ecommerce" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span>E-commerce by Conweb</span>
+        </span>
+        <h2 class="heading">Punya toko online sendiri, tanpa potongan admin marketplace dari Conweb.</h2>
+        <p class="lead">Bangun katalog produk, terima order lewat WhatsApp, dan tampil lebih profesional dengan website toko online mandiri untuk UMKM.</p>
+        <div class="hero-cta" style="justify-content:center;margin-top:24px">
+          <a href="{{ route('ecommerce.index') }}" class="btn btn-primary">Lihat Fitur
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="{{ $wa }}" target="_blank" rel="noopener" class="btn btn-line">Konsultasi via WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="svc-grid cols-4 reveal" style="margin-top:46px">
+        @php
+          $ecomFeatures = [
+            ['0% komisi dari Conweb', 'Tidak ada potongan penjualan dari Conweb untuk tiap order.'],
+            ['Katalog produk', 'Tampilkan produk rapi lengkap dengan foto, harga, dan kategori.'],
+            ['Checkout WhatsApp', 'Order langsung masuk ke WhatsApp owner, tanpa ribet.'],
+            ['Dashboard pesanan', 'Pantau & kelola status pesanan dari satu tempat.'],
+            ['Voucher promo', 'Buat kode diskon sederhana untuk menarik pembeli.'],
+            ['SEO produk', 'Halaman produk siap tampil di pencarian Google.'],
+            ['Tampilan sesuai brand', 'Warna & logo toko mengikuti identitas brand Anda.'],
+            ['Link marketplace', 'Tetap pasang link Shopee/TikTok untuk traffic tambahan.'],
+          ];
+        @endphp
+        @foreach($ecomFeatures as [$title, $desc])
+          <div class="svc" style="padding:24px">
+            <div class="svc-ic" style="width:46px;height:46px;margin-bottom:14px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <h3 style="font-size:17px;margin-bottom:6px">{{ $title }}</h3>
+            <p style="font-size:13.5px;margin-bottom:0">{{ $desc }}</p>
+          </div>
+        @endforeach
+      </div>
+
+      <p class="lead center" style="margin:30px auto 0;font-size:13px;color:var(--muted);max-width:680px">
+        Biaya pihak ketiga seperti payment gateway, ekspedisi, atau layanan tambahan tetap mengikuti ketentuan masing-masing provider jika digunakan.
+      </p>
+    </div>
+  </section>
+
   <!-- CTA / CONTACT -->
   <section class="section" id="contact">
     <div class="wrap">

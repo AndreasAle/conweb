@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Pesanan & Leads',
+                'E-commerce by Conweb',
                 'Template Website',
                 'Layanan',
                 'Paket & Harga',

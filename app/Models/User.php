@@ -57,6 +57,24 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Order::class)->latest();
     }
 
+    /** Toko Conweb Store yang dimiliki user ini (fitur E-commerce by Conweb). */
+    public function stores()
+    {
+        return $this->hasMany(Store::class)->latest();
+    }
+
+    /** Toko aktif pertama milik user (owner umumnya punya 1 toko di tahap awal). */
+    public function primaryStore(): ?Store
+    {
+        return $this->stores()->first();
+    }
+
+    /** Apakah user ini pemilik toko (punya minimal 1 toko). */
+    public function isStoreOwner(): bool
+    {
+        return $this->stores()->exists();
+    }
+
     public function isVerified(): bool
     {
         return ! is_null($this->email_verified_at);

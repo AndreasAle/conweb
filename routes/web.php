@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\EcommerceController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\SeamediaController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\XenditWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +29,7 @@ Route::domain('conwebseamedia.conweb.id')->group(function () {
 // Preview/akses path (lokal & fallback): /seamedia
 Route::get('/seamedia', [SeamediaController::class, 'index'])->name('seamedia.index');
 
-Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -38,6 +40,9 @@ Route::get('/layanan', [ServiceController::class, 'index'])->name('services.inde
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
 Route::get('/paket', [PricingController::class, 'index'])->name('pricing.index');
+
+// ---- E-commerce by Conweb (halaman fitur toko online UMKM) ----
+Route::get('/ecommerce', [EcommerceController::class, 'index'])->name('ecommerce.index');
 
 Route::get('/portofolio', [PortfolioController::class, 'index'])->name('portfolio.index');
 
