@@ -93,14 +93,14 @@ class DokuService
      *
      * @return array{invoice_number:string, url:string}
      */
-    public function createTestTransaction(int $amount = 1000): array
+    public function createTestTransaction(int $amount = 1000, array $channels = []): array
     {
         return $this->createTransaction(
             'TEST-'.now()->format('ymdHis'),
             $amount,
             ['id' => 'test-1', 'name' => 'Test Conweb', 'email' => 'test@conweb.id', 'phone' => '6281234567890'],
             url('/'),
-            [],
+            $channels,
             'connection test',
         );
     }

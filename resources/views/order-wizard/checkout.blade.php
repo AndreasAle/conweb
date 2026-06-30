@@ -27,6 +27,9 @@
   @if($errors->any())
   <div class="alert alert-error">{{ $errors->first() }}</div>
   @endif
+  @if(session('error'))
+  <div class="alert alert-error">{{ session('error') }}</div>
+  @endif
 
   <form method="POST" action="{{ route('order-wizard.checkout.store') }}" id="ow-checkout-form">
     @csrf

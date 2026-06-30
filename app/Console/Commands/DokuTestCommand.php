@@ -12,7 +12,7 @@ use Illuminate\Http\Client\RequestException;
  */
 class DokuTestCommand extends Command
 {
-    protected $signature = 'doku:test {amount=1000 : Nominal transaksi uji (Rupiah)}';
+    protected $signature = 'doku:test {amount=1000 : Nominal transaksi uji (Rupiah)} {channel? : Kode payment_method_types DOKU, mis. QRIS}';
 
     protected $description = 'Membuat transaksi dummy ke DOKU untuk memverifikasi credential & signature.';
 
@@ -29,10 +29,14 @@ class DokuTestCommand extends Command
         $this->info('Base URL   : '.$doku->baseUrl());
         $this->info('Endpoint   : '.config('doku.payment_endpoint'));
         $this->info('Client ID  : '.config('doku.client_id'));
+        $channel = $this->argument('channel');
+        if ($channel) {
+            $this->info('Channel    : '.$channel);
+        }
         $this->newLine();
 
         try {
-            $result = $doku->createTestTransaction((int) $this->argument('amount'));
+            $result = $doku->createTestTransaction((int) $this->argument('amount'), $channel ? [$channel] : []);
         } catch (RequestException $e) {
             $this->error('DOKU menolak request (HTTP '.optional($e->response)->status().').');
             $this->line('Response: '.optional($e->response)->body());
