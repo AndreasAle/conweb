@@ -10,6 +10,7 @@ class Order extends Model
 
     protected $casts = [
         'addons' => 'array',
+        'raw_callback' => 'array',
         'paid_at' => 'datetime',
         'wa_notified_at' => 'datetime',
         'status_updated_at' => 'datetime',

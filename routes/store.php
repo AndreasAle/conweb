@@ -4,6 +4,7 @@ use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\CategoryController;
 use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Controllers\Store\DashboardController;
+use App\Http\Controllers\Store\OnboardingController;
 use App\Http\Controllers\Store\OrderController as DashboardOrderController;
 use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\Store\SettingsController;
@@ -46,6 +47,22 @@ Route::prefix('store-dashboard')->name('store-dashboard.')
         Route::get('settings', [SettingsController::class, 'edit'])->name('settings');
         Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
     });
+
+// ---------------------------------------------------------------------------
+// Onboarding self-service — user beli paket Conweb Store & buat tokonya sendiri.
+// Halaman paket boleh dilihat publik; checkout & setup butuh login + OTP.
+// ---------------------------------------------------------------------------
+Route::prefix('buka-toko')->name('store-onboarding.')->group(function () {
+    Route::get('/', [OnboardingController::class, 'packages'])->name('packages');
+
+    Route::middleware(['auth', 'verified.otp'])->group(function () {
+        Route::get('/checkout/{package:slug}', [OnboardingController::class, 'checkout'])->name('checkout');
+        Route::post('/checkout/{package:slug}', [OnboardingController::class, 'purchase'])->name('purchase');
+        Route::get('/status/{code}', [OnboardingController::class, 'status'])->name('status');
+        Route::get('/setup/{code}', [OnboardingController::class, 'setup'])->name('setup');
+        Route::post('/setup/{code}', [OnboardingController::class, 'setupStore'])->name('setup.store');
+    });
+});
 
 // ---------------------------------------------------------------------------
 // Public Storefront — toko publik per UMKM.

@@ -32,10 +32,10 @@
     <h1>Punya toko online sendiri, <br>tanpa potongan admin marketplace dari Conweb.</h1>
     <p>Bangun katalog produk, terima order lewat WhatsApp, dan tampil lebih profesional dengan website toko online mandiri untuk UMKM.</p>
     <div class="hero-cta" style="margin-top:26px">
-      <a href="{{ $wa }}" target="_blank" rel="noopener" class="btn btn-primary">Buat Toko Online Sekarang
+      <a href="{{ route('store-onboarding.packages') }}" class="btn btn-primary">Buat Toko Online Sekarang
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#fitur" class="btn btn-line">Lihat Fitur</a>
+      <a href="{{ $wa }}" target="_blank" rel="noopener" class="btn btn-line">Konsultasi via WhatsApp</a>
     </div>
   </div>
 </section>

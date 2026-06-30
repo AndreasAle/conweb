@@ -48,6 +48,9 @@
     .topbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 26px}
     .topbar .tb-title{font-family:var(--display);font-weight:700;color:var(--ink);font-size:17px}
     .topbar .tb-right{display:flex;align-items:center;gap:10px}
+    .tb-pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--display);font-size:12.5px;font-weight:600;color:var(--ink-2);padding:7px 13px;border-radius:99px;background:var(--soft);border:1px solid var(--line)}
+    .tb-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.16)}
+    .tb-pill.off .dot{background:var(--muted);box-shadow:0 0 0 3px rgba(129,144,171,.16)}
     .burger{display:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--line-2);background:#fff;place-items:center;color:var(--ink)}
     .burger svg{width:22px;height:22px}
     .content{padding:26px;max-width:1200px;width:100%}
@@ -120,6 +123,7 @@
       .burger{display:grid}
       .form-grid{grid-template-columns:1fr}
     }
+    @media(max-width:600px){.tb-pill .lbl{display:none}.tb-pill{padding:7px 9px}}
     @media(max-width:520px){.stat-grid{grid-template-columns:1fr}.content{padding:18px}}
   </style>
   @stack('styles')
@@ -165,6 +169,12 @@
       </a>
     </nav>
     <div class="sb-foot">
+      @if(! empty($s['site.whatsapp']))
+      <a href="{{ whatsappUrl($s['site.whatsapp'], 'Halo Conweb, saya butuh bantuan dengan dashboard toko '.$sd->name.'.') }}" target="_blank" rel="noopener" style="margin-bottom:12px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        Bantuan
+      </a>
+      @endif
       <a href="{{ route('store.home', $sd->slug) }}" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
         Lihat toko publik
@@ -183,6 +193,10 @@
         <span class="tb-title">@yield('title', 'Dashboard')</span>
       </div>
       <div class="tb-right">
+        <span class="tb-pill {{ $sd->is_active ? '' : 'off' }}" title="{{ $sd->is_active ? 'Toko aktif' : 'Toko nonaktif' }}">
+          <span class="dot"></span>
+          <span class="lbl">{{ $sd->package?->name ?? 'Conweb Store' }}</span>
+        </span>
         <a href="{{ route('store.home', $sd->slug) }}" target="_blank" rel="noopener" class="btn btn-line btn-sm">Lihat Toko</a>
         <form method="POST" action="{{ route('logout') }}">@csrf
           <button type="submit" class="btn btn-line btn-sm">Keluar</button>

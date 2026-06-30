@@ -63,6 +63,12 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Store::class)->latest();
     }
 
+    /** Pembelian paket Conweb Store (self-service onboarding). */
+    public function storePurchases()
+    {
+        return $this->hasMany(StorePurchase::class)->latest();
+    }
+
     /** Toko aktif pertama milik user (owner umumnya punya 1 toko di tahap awal). */
     public function primaryStore(): ?Store
     {

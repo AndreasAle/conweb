@@ -21,8 +21,8 @@ class EnsureStoreOwner
 
         if (! $store) {
             return redirect()
-                ->route('home')
-                ->with('error', 'Anda belum memiliki toko. Silakan hubungi admin Conweb untuk mengaktifkan Conweb Store.');
+                ->route('store-onboarding.packages')
+                ->with('error', 'Anda belum memiliki toko. Pilih paket Conweb Store untuk mulai membuka toko online Anda.');
         }
 
         // Bagikan ke seluruh view dashboard + binding agar mudah diakses.

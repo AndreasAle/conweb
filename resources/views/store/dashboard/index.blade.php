@@ -1,6 +1,15 @@
 @extends('layouts.store-dashboard')
 @section('title', 'Overview')
 
+@push('styles')
+  .quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .quick{display:flex;align-items:center;gap:13px;padding:16px 18px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);transition:.2s;font-family:var(--display);font-weight:600;color:var(--ink);font-size:14px}
+  .quick:hover{border-color:var(--brand-l);transform:translateY(-2px);box-shadow:var(--shadow)}
+  .quick .qic{width:38px;height:38px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-d)}
+  .quick .qic svg{width:19px;height:19px}
+  @media(max-width:980px){.quick-grid{grid-template-columns:1fr 1fr}}
+@endpush
+
 @section('content')
 <div class="page-head">
   <div>
@@ -34,6 +43,25 @@
     <b style="font-size:21px">{{ formatRupiah($stats['revenue']) }}</b>
     <span>Estimasi Omzet</span>
   </div>
+</div>
+
+<div class="quick-grid">
+  <a href="{{ route('store-dashboard.products.create') }}" class="quick">
+    <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+    Tambah Produk
+  </a>
+  <a href="{{ route('store.home', $store->slug) }}" target="_blank" rel="noopener" class="quick">
+    <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>
+    Lihat Toko
+  </a>
+  <a href="{{ route('store-dashboard.vouchers.create') }}" class="quick">
+    <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v14"/></svg></span>
+    Buat Voucher
+  </a>
+  <a href="{{ route('store-dashboard.settings') }}" class="quick">
+    <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+    Edit Profil Toko
+  </a>
 </div>
 
 <div class="card">

@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->validateCsrfTokens(except: [
             'webhooks/xendit',
+            'webhooks/doku',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

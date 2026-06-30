@@ -34,6 +34,7 @@
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <a href="{{ route('order-wizard.start') }}" class="btn btn-primary btn-sm">+ Pesan Website</a>
+          <a href="{{ route('store-onboarding.packages') }}" class="btn btn-line btn-sm">+ Buka Toko</a>
           <form method="POST" action="{{ route('logout') }}">@csrf<button class="btn btn-line btn-sm">Keluar</button></form>
         </div>
       </div>
@@ -69,6 +70,49 @@
         <h3 style="font-size:20px;margin-bottom:10px">Belum ada pesanan</h3>
         <p style="margin-bottom:22px">Mulai pesan website pertamamu dan pantau progresnya di sini.</p>
         <a href="{{ route('order-wizard.start') }}" class="btn btn-primary">Pesan Sekarang</a>
+      </div>
+      @endforelse
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap" style="max-width:880px;margin-inline:auto">
+      <div class="sec-head reveal" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h2 style="font-size:22px">Toko Online Saya</h2>
+        <a href="{{ route('store-onboarding.packages') }}" class="btn btn-line btn-sm">+ Buka Toko Baru</a>
+      </div>
+
+      @forelse($purchases as $p)
+      <div class="order-row reveal">
+        <div>
+          <span class="code">{{ $p->order_code }}</span>
+          <h3>{{ $p->package_name }}</h3>
+          <span class="ostatus {{ $p->isPaid() ? 'done' : '' }}" @if(! $p->isPaid())style="background:rgba(245,158,11,.13);color:#b45309;border-color:rgba(245,158,11,.3)"@endif>
+            <span class="dot" style="background:currentColor;box-shadow:none;width:6px;height:6px"></span>
+            {{ $p->statusLabel() }}
+          </span>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+          <div style="font-family:var(--display);font-weight:700;color:var(--ink);font-size:17px">{{ $p->formatted_amount }}</div>
+          @if($p->isPaid() && $p->store_id)
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+              <a href="{{ route('store-dashboard.index') }}" class="btn btn-primary btn-sm">Kelola Toko</a>
+              <a href="{{ route('store.home', $p->store->slug) }}" target="_blank" rel="noopener" class="btn btn-line btn-sm">Lihat</a>
+            </div>
+          @elseif($p->isPaid())
+            <a href="{{ route('store-onboarding.setup', $p->order_code) }}" class="btn btn-primary btn-sm">Lengkapi Data Toko</a>
+          @elseif(in_array($p->payment_status, ['failed','expired']))
+            <a href="{{ route('store-onboarding.packages') }}" class="btn btn-line btn-sm">Beli Lagi</a>
+          @else
+            <a href="{{ route('store-onboarding.status', $p->order_code) }}" class="btn btn-primary btn-sm">Lanjutkan Pembayaran</a>
+          @endif
+        </div>
+      </div>
+      @empty
+      <div class="acc-empty reveal">
+        <h3 style="font-size:20px;margin-bottom:10px">Belum punya toko online</h3>
+        <p style="margin-bottom:22px">Buka toko online mandiri untuk UMKM-mu — kelola produk &amp; pesanan sendiri, 0% biaya admin dari Conweb.</p>
+        <a href="{{ route('store-onboarding.packages') }}" class="btn btn-primary">Buka Toko Online</a>
       </div>
       @endforelse
     </div>

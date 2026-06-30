@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\PricingPlan;
 use App\Models\PromoCode;
 use App\Models\WebTemplate;
+use App\Services\DokuService;
 use App\Services\FonnteService;
 use App\Support\DomainAvailability;
 use App\Support\OrderWizard;
@@ -153,12 +154,20 @@ class OrderWizardController extends Controller
             return redirect()->route('order-wizard.domain');
         }
 
+        // Kelompokkan channel pembayaran DOKU per grup untuk ditampilkan di UI.
+        $channelGroups = [];
+        foreach ((array) config('doku.channels', []) as $code => $meta) {
+            $channelGroups[$meta['group'] ?? 'Lainnya'][$code] = $meta['label'] ?? $code;
+        }
+
         return view('order-wizard.checkout', [
             'durations' => OrderWizard::durationOptions(),
             'addons' => OrderWizard::ADDONS,
             'selectedDuration' => (int) OrderWizard::get('duration_years', 1),
             'selectedAddons' => OrderWizard::get('addons', []),
             'totals' => OrderWizard::totals((int) OrderWizard::get('duration_years', 1)),
+            'channelGroups' => $channelGroups,
+            'customerEmail' => OrderWizard::get('customer_email'),
             'currentStep' => 'checkout',
         ]);
     }
@@ -189,15 +198,29 @@ class OrderWizardController extends Controller
         return response()->json(OrderWizard::totals((int) OrderWizard::get('duration_years', 1)));
     }
 
-    public function storeCheckout(Request $request, FonnteService $fonnte)
+    public function storeCheckout(Request $request, FonnteService $fonnte, DokuService $doku)
     {
         if (! OrderWizard::hasDomain() || ! OrderWizard::hasTemplate() || ! OrderWizard::hasProfile()) {
             return redirect()->route('order-wizard.domain');
         }
 
+        $validated = $request->validate([
+            'payment_channel' => ['required', 'string', 'in:'.implode(',', array_keys((array) config('doku.channels', [])))],
+            'customer_email' => ['required', 'email:rfc'],
+        ], [
+            'payment_channel.required' => 'Pilih metode pembayaran terlebih dahulu.',
+            'payment_channel.in' => 'Metode pembayaran tidak valid.',
+            'customer_email.required' => 'Email wajib diisi untuk invoice & notifikasi pembayaran.',
+            'customer_email.email' => 'Format email tidak valid.',
+        ]);
+
         $duration = (int) $request->input('duration', OrderWizard::get('duration_years', 1));
         $addons = (array) $request->input('addons', OrderWizard::get('addons', []));
-        OrderWizard::put(['duration_years' => $duration, 'addons' => $addons]);
+        OrderWizard::put([
+            'duration_years' => $duration,
+            'addons' => $addons,
+            'customer_email' => $validated['customer_email'],
+        ]);
 
         $totals = OrderWizard::totals($duration);
         $template = OrderWizard::template();
@@ -212,7 +235,7 @@ class OrderWizardController extends Controller
             'domain_tld' => OrderWizard::get('domain_tld'),
             'domain_price' => OrderWizard::get('domain_price'),
             'customer_name' => OrderWizard::get('customer_name'),
-            'customer_email' => OrderWizard::get('customer_email'),
+            'customer_email' => $validated['customer_email'],
             'customer_phone' => OrderWizard::get('customer_phone'),
             'duration_years' => $duration,
             'addons' => $addons,
@@ -220,19 +243,29 @@ class OrderWizardController extends Controller
             'discount_amount' => $totals['discount_amount'],
             'total_amount' => $totals['total'],
             'payment_status' => 'pending',
+            'payment_channel' => $validated['payment_channel'],
         ]);
 
         if ($totals['promo_code']) {
             PromoCode::where('code', $totals['promo_code'])->increment('used_count');
         }
 
-        // Sementara payment gateway & domain API belum aktif: kirim draft pesanan
-        // lengkap ke WhatsApp admin (otomatis bila token Fonnte ada).
+        // Beri tahu admin ada order baru (menunggu pembayaran).
         $fonnte->sendMessage(OrderWizard::adminWhatsapp(), OrderWizard::buildOrderMessage($order));
+
+        // Buat transaksi DOKU untuk channel terpilih, lalu arahkan ke pembayaran.
+        // (Dev-mode tanpa credential: createPayment mengembalikan URL halaman thanks.)
+        try {
+            $payment = $doku->createPayment($order, [$validated['payment_channel']]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->with('error', 'Gagal membuat transaksi pembayaran. Silakan coba lagi atau hubungi kami via WhatsApp.');
+        }
 
         OrderWizard::clear();
 
-        return redirect()->route('order.thanks', ['order' => $order->order_code]);
+        return redirect()->away($payment['url']);
     }
 
     public function thanks(Request $request)

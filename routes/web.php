@@ -19,6 +19,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\XenditWebhookController;
+use App\Http\Controllers\DokuWebhookController;
 use Illuminate\Support\Facades\Route;
 
 // ---- Landing kolaborasi SEAMEDIA × CONWEB ----
@@ -102,3 +103,4 @@ Route::prefix('order')->name('order-wizard.')->middleware(['auth', 'verified.otp
 Route::get('/order/thanks', [OrderWizardController::class, 'thanks'])->middleware(['auth', 'verified.otp'])->name('order.thanks');
 
 Route::post('/webhooks/xendit', [XenditWebhookController::class, 'handle'])->name('webhooks.xendit');
+Route::post('/webhooks/doku', [DokuWebhookController::class, 'handle'])->name('webhooks.doku');
