@@ -22,6 +22,15 @@ return [
     'payment_due_minutes' => (int) env('DOKU_PAYMENT_DUE_MINUTES', 1440),
 
     /*
+    | Endpoint pembuatan pembayaran (Non-SNAP). Default DOKU Checkout (aggregated,
+    | semua metode) — cocok untuk Client ID berformat "BRN-". Jika akunmu hanya
+    | mengaktifkan produk tertentu, ganti via .env:
+    |   - Checkout (aggregated)  : /checkout/v1/payment
+    |   - Cards only (kartu)     : /credit-card/v1/payment-page
+    */
+    'payment_endpoint' => env('DOKU_PAYMENT_ENDPOINT', '/checkout/v1/payment'),
+
+    /*
     | Daftar metode pembayaran yang ditawarkan ke customer di halaman checkout
     | kita (model in-house). Key = payment_method_types DOKU, value = label UI.
     | Sesuaikan dengan channel yang aktif di akun DOKU kamu.

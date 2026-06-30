@@ -89,6 +89,23 @@ class DokuService
     }
 
     /**
+     * Transaksi dummy untuk menguji koneksi + signature DOKU (lihat `php artisan doku:test`).
+     *
+     * @return array{invoice_number:string, url:string}
+     */
+    public function createTestTransaction(int $amount = 1000): array
+    {
+        return $this->createTransaction(
+            'TEST-'.now()->format('ymdHis'),
+            $amount,
+            ['id' => 'test-1', 'name' => 'Test Conweb', 'email' => 'test@conweb.id', 'phone' => '6281234567890'],
+            url('/'),
+            [],
+            'connection test',
+        );
+    }
+
+    /**
      * Inti pembuatan transaksi DOKU Checkout. Dipakai bersama oleh pembayaran
      * order website maupun pembelian paket toko.
      *
@@ -105,7 +122,7 @@ class DokuService
             return ['invoice_number' => $invoiceNumber, 'url' => $callbackUrl];
         }
 
-        $target = '/checkout/v1/payment';
+        $target = config('doku.payment_endpoint', '/checkout/v1/payment');
 
         $body = [
             'order' => [
@@ -113,6 +130,7 @@ class DokuService
                 'invoice_number' => $invoiceNumber,
                 'currency' => 'IDR',
                 'callback_url' => $callbackUrl,
+                'auto_redirect' => true,
             ],
             'payment' => [
                 'payment_due_date' => (int) config('doku.payment_due_minutes', 1440),
@@ -140,9 +158,21 @@ class DokuService
             ->throw()
             ->json();
 
+        // URL pembayaran bisa berbeda lokasinya tergantung produk DOKU:
+        // - Checkout (aggregated): response.payment.url
+        // - Cards: credit_card_payment_page.url
+        $url = data_get($response, 'response.payment.url')
+            ?? data_get($response, 'credit_card_payment_page.url')
+            ?? data_get($response, 'payment.url')
+            ?? '';
+
+        if ($url === '') {
+            Log::warning('DOKU: payment URL tidak ditemukan pada response', ['response' => $response]);
+        }
+
         return [
             'invoice_number' => $invoiceNumber,
-            'url' => data_get($response, 'response.payment.url', ''),
+            'url' => $url,
         ];
     }
 
