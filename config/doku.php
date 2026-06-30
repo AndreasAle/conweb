@@ -31,6 +31,15 @@ return [
     'payment_endpoint' => env('DOKU_PAYMENT_ENDPOINT', '/checkout/v1/payment'),
 
     /*
+    | Batasi pembayaran ke channel yang dipilih customer di halaman kita?
+    | - true  : kirim payment_method_types (DOKU langsung ke metode terpilih).
+    |           Wajib semua channel yang ditawarkan SUDAH aktif di akun DOKU.
+    | - false : jangan batasi — DOKU menampilkan SEMUA metode yang aktif di
+    |           akunmu. Pakai ini selama belum semua channel diaktifkan.
+    */
+    'restrict_channel' => (bool) env('DOKU_RESTRICT_CHANNEL', true),
+
+    /*
     | Daftar metode pembayaran yang ditawarkan ke customer di halaman checkout
     | kita (model in-house). Key = payment_method_types DOKU, value = label UI.
     | Sesuaikan dengan channel yang aktif di akun DOKU kamu.

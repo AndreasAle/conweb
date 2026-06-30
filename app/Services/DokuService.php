@@ -31,6 +31,19 @@ class DokuService
     }
 
     /**
+     * Channel yang benar-benar dikirim ke DOKU. Jika restrict_channel=false,
+     * kembalikan kosong agar DOKU menampilkan semua metode yang aktif di akun
+     * (berguna selama belum semua channel diaktifkan di dashboard DOKU).
+     *
+     * @param  array<int,string>  $channels
+     * @return array<int,string>
+     */
+    protected function channelsToSend(array $channels): array
+    {
+        return config('doku.restrict_channel', true) ? $channels : [];
+    }
+
+    /**
      * Buat transaksi pembayaran DOKU Checkout untuk order paket website.
      *
      * @param  array<int,string>  $channels  payment_method_types DOKU yang dipilih customer.
@@ -49,7 +62,7 @@ class DokuService
             (int) $order->total_amount,
             ['id' => 'order-'.$order->id, 'name' => $order->customer_name, 'email' => $order->customer_email, 'phone' => $order->customer_phone],
             URL::route('order.thanks', ['order' => $order->order_code]),
-            $channels,
+            $this->channelsToSend($channels),
             "order {$order->order_code}",
         );
 
@@ -75,7 +88,7 @@ class DokuService
             (int) $purchase->amount,
             ['id' => 'purchase-'.$purchase->id, 'name' => $purchase->customer_name, 'email' => $purchase->customer_email, 'phone' => $purchase->customer_phone],
             URL::route('store-onboarding.status', ['code' => $purchase->order_code]),
-            $channels,
+            $this->channelsToSend($channels),
             "store purchase {$purchase->order_code}",
         );
 
