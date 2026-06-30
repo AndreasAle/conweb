@@ -36,16 +36,19 @@ return [
     | Sesuaikan dengan channel yang aktif di akun DOKU kamu.
     */
     'channels' => [
-        'VIRTUAL_ACCOUNT_BANK_CENTRAL_ASIA'      => ['label' => 'Virtual Account BCA', 'group' => 'Virtual Account'],
+        'VIRTUAL_ACCOUNT_BCA'                    => ['label' => 'Virtual Account BCA', 'group' => 'Virtual Account'],
         'VIRTUAL_ACCOUNT_BANK_MANDIRI'           => ['label' => 'Virtual Account Mandiri', 'group' => 'Virtual Account'],
-        'VIRTUAL_ACCOUNT_BANK_RAKYAT_INDONESIA'  => ['label' => 'Virtual Account BRI', 'group' => 'Virtual Account'],
-        'VIRTUAL_ACCOUNT_BANK_NEGARA_INDONESIA'  => ['label' => 'Virtual Account BNI', 'group' => 'Virtual Account'],
+        'VIRTUAL_ACCOUNT_BRI'                    => ['label' => 'Virtual Account BRI', 'group' => 'Virtual Account'],
+        'VIRTUAL_ACCOUNT_BNI'                    => ['label' => 'Virtual Account BNI', 'group' => 'Virtual Account'],
         'VIRTUAL_ACCOUNT_BANK_SYARIAH_MANDIRI'   => ['label' => 'Virtual Account BSI', 'group' => 'Virtual Account'],
         'VIRTUAL_ACCOUNT_BANK_CIMB'              => ['label' => 'Virtual Account CIMB Niaga', 'group' => 'Virtual Account'],
+        'VIRTUAL_ACCOUNT_BANK_PERMATA'           => ['label' => 'Virtual Account Permata', 'group' => 'Virtual Account'],
+        'VIRTUAL_ACCOUNT_BANK_DANAMON'           => ['label' => 'Virtual Account Danamon', 'group' => 'Virtual Account'],
         'ONLINE_TO_OFFLINE_ALFA'                 => ['label' => 'Alfamart / Alfamidi', 'group' => 'Gerai Retail'],
         'EMONEY_OVO'                             => ['label' => 'OVO', 'group' => 'E-Wallet'],
         'EMONEY_SHOPEE_PAY'                      => ['label' => 'ShopeePay', 'group' => 'E-Wallet'],
         'EMONEY_DANA'                            => ['label' => 'DANA', 'group' => 'E-Wallet'],
+        'EMONEY_LINKAJA'                         => ['label' => 'LinkAja', 'group' => 'E-Wallet'],
         'QRIS'                                   => ['label' => 'QRIS (semua e-wallet & m-banking)', 'group' => 'QRIS'],
         'CREDIT_CARD'                            => ['label' => 'Kartu Kredit / Debit', 'group' => 'Kartu'],
     ],
