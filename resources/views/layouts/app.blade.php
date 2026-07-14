@@ -419,6 +419,7 @@
     const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} }); }, { threshold:.12 });
     document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   </script>
+  @stack('chat-config')
   @include('partials.chat-widget')
 
   @stack('scripts')

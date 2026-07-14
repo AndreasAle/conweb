@@ -8,6 +8,7 @@ use App\Models\PricingPlan;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\WebTemplate;
+use Illuminate\Support\Str;
 use App\Support\Locale;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -52,11 +53,42 @@ class ConwebAssistant
         }
     }
 
-    /** Panggil OpenAI Chat Completions dengan konteks Conweb. */
-    protected function askOpenAI(string $message, array $history): string
+    /**
+     * Jawab pesan dalam konteks SATU usaha (template tertentu).
+     * Chatbot jadi "asisten toko" usaha itu, bukan asisten Conweb.
+     *
+     * @return array{reply:string, source:string}
+     */
+    public function replyForTemplate(WebTemplate $template, string $message, array $history = []): array
+    {
+        $message = trim($message);
+        if ($message === '') {
+            return ['reply' => 'Silakan ketik pertanyaan kamu dulu ya 🙂', 'source' => 'guard'];
+        }
+
+        $key = config('services.openai.key');
+
+        if (empty($key)) {
+            return ['reply' => $this->templateFallbackReply($template, $message), 'source' => 'fallback'];
+        }
+
+        try {
+            return [
+                'reply' => $this->askOpenAI($message, $history, $this->templateSystemPrompt($template)),
+                'source' => 'openai',
+            ];
+        } catch (\Throwable $e) {
+            Log::warning('ConwebAssistant (template) OpenAI gagal: '.$e->getMessage());
+
+            return ['reply' => $this->templateFallbackReply($template, $message), 'source' => 'fallback'];
+        }
+    }
+
+    /** Panggil OpenAI Chat Completions dengan system prompt tertentu. */
+    protected function askOpenAI(string $message, array $history, ?string $systemPrompt = null): string
     {
         $messages = [
-            ['role' => 'system', 'content' => $this->systemPrompt()],
+            ['role' => 'system', 'content' => $systemPrompt ?? $this->systemPrompt()],
         ];
 
         // Sertakan maksimal 8 pesan terakhir untuk konteks percakapan.
@@ -185,6 +217,83 @@ PROMPT;
 
             return implode("\n\n", $parts) ?: 'Belum ada data konten yang tersedia.';
         });
+    }
+
+    /**
+     * Bangun profil usaha satu template — SEMI-AUTO:
+     * dasar diambil otomatis dari kolom yang sudah ada (nama, kategori, tagline),
+     * lalu dilengkapi field chatbot_* bila admin mengisinya.
+     */
+    public function templateProfile(WebTemplate $t): string
+    {
+        $bizName = $t->chatbot_business_name ?: $t->name;
+        $parts = [];
+
+        // Dasar (otomatis dari kolom yang ada)
+        $parts[] = "Nama usaha: {$bizName}";
+        $parts[] = "Bidang/kategori: {$t->category}";
+        if ($tag = t($t, 'tagline')) {
+            $parts[] = "Tagline: {$tag}";
+        }
+
+        // Lengkapi dari field chatbot (opsional)
+        if ($t->chatbot_about) {
+            $parts[] = "Tentang: ".strip_tags($t->chatbot_about);
+        }
+        if ($t->chatbot_offerings) {
+            $parts[] = "Produk/Menu & harga:\n".strip_tags($t->chatbot_offerings);
+        }
+        if ($t->chatbot_hours) {
+            $parts[] = "Jam operasional: {$t->chatbot_hours}";
+        }
+        if ($t->chatbot_location) {
+            $parts[] = "Lokasi/cabang: {$t->chatbot_location}";
+        }
+        if ($t->chatbot_contact) {
+            $parts[] = "Kontak: {$t->chatbot_contact}";
+        }
+        $faq = collect($t->chatbot_faq ?? [])
+            ->map(fn ($f) => is_array($f) ? trim(($f['q'] ?? '').' → '.($f['a'] ?? ''), ' →') : null)
+            ->filter();
+        if ($faq->isNotEmpty()) {
+            $parts[] = "FAQ usaha:\n- ".$faq->implode("\n- ");
+        }
+
+        return implode("\n", $parts);
+    }
+
+    /** System prompt: chatbot berperan sebagai asisten toko usaha tersebut. */
+    protected function templateSystemPrompt(WebTemplate $t): string
+    {
+        $bizName = $t->chatbot_business_name ?: $t->name;
+        $tone = $t->chatbot_tone ?: 'ramah & santai';
+        $profile = $this->templateProfile($t);
+
+        return <<<PROMPT
+Kamu adalah asisten AI (customer service) untuk "{$bizName}" — sebuah usaha di bidang {$t->category}.
+Ini adalah DEMO chatbot yang disertakan pada template website buatan ConWeb (conweb.id).
+
+ATURAN:
+- Berperanlah sepenuhnya sebagai asisten "{$bizName}", BUKAN asisten ConWeb. Jangan menyebut ConWeb kecuali pengguna bertanya soal template/pembuatan website.
+- Gaya bahasa: {$tone}. Gunakan Bahasa Indonesia, ringkas, membantu. Emoji secukupnya.
+- Jawab pertanyaan pelanggan seputar usaha ini: produk/menu, harga, jam buka, lokasi, cara pesan, dan info di DATA di bawah.
+- Jika informasi tidak ada di DATA, jawab jujur dan sarankan pelanggan menghubungi kontak usaha. JANGAN mengarang harga/menu/janji.
+- Jika pelanggan ingin memesan, bantu arahkan dengan ramah sesuai info kontak yang tersedia.
+
+=== DATA USAHA "{$bizName}" (sumber kebenaran) ===
+{$profile}
+=== AKHIR DATA ===
+PROMPT;
+    }
+
+    /** Fallback tanpa OpenAI untuk mode usaha. */
+    protected function templateFallbackReply(WebTemplate $t, string $message): string
+    {
+        $bizName = $t->chatbot_business_name ?: $t->name;
+        $profile = $this->templateProfile($t);
+
+        return "Halo! 👋 Saya asisten *{$bizName}*.\n\nBerikut info yang saya punya:\n\n".$profile
+            ."\n\nAda yang bisa saya bantu lagi? 😊";
     }
 
     /** Jawaban sederhana berbasis pencarian knowledge base saat OpenAI tidak tersedia. */

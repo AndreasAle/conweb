@@ -53,6 +53,37 @@ class WebTemplateResource extends Resource
                 Forms\Components\TextInput::make('sort')->label('Urutan')->numeric()->default(0),
             ]),
             Forms\Components\Toggle::make('is_active')->label('Aktif')->default(true),
+
+            Forms\Components\Section::make('🤖 Chatbot AI (asisten usaha di demo)')
+                ->description('Chatbot ini muncul di halaman preview template & berperan sebagai asisten usaha tsb (mis. Geprek Bar). Dasar konteks otomatis dari Nama, Kategori, & Tagline di atas — kolom di bawah untuk melengkapi (opsional).')
+                ->collapsed()
+                ->schema([
+                    Forms\Components\Grid::make(2)->schema([
+                        Forms\Components\Toggle::make('chatbot_enabled')->label('Aktifkan chatbot di preview')->default(true),
+                        Forms\Components\TextInput::make('chatbot_business_name')->label('Nama Usaha (kalau beda dari nama template)')->placeholder('mis. Geprek Bar'),
+                    ]),
+                    Forms\Components\Grid::make(2)->schema([
+                        Forms\Components\TextInput::make('chatbot_tone')->label('Gaya Bicara')->default('ramah & santai')->placeholder('ramah & santai / formal / kekinian'),
+                        Forms\Components\TextInput::make('chatbot_hours')->label('Jam Operasional')->placeholder('Setiap hari 09.00–22.00 WIB'),
+                    ]),
+                    Forms\Components\Textarea::make('chatbot_about')->label('Tentang Usaha')->rows(2)
+                        ->placeholder('Deskripsi singkat usaha ini.'),
+                    Forms\Components\Textarea::make('chatbot_offerings')->label('Produk / Menu & Harga')->rows(4)
+                        ->placeholder("Contoh:\nAyam Geprek Original - Rp15.000\nAyam Geprek Keju - Rp20.000\nEs Teh - Rp5.000"),
+                    Forms\Components\Grid::make(2)->schema([
+                        Forms\Components\TextInput::make('chatbot_location')->label('Lokasi / Cabang')->placeholder('Jl. Merdeka No. 10, Bandung'),
+                        Forms\Components\TextInput::make('chatbot_contact')->label('Kontak / WhatsApp Usaha')->placeholder('0812-3456-7890'),
+                    ]),
+                    Forms\Components\TextInput::make('chatbot_greeting')->label('Sapaan Awal (opsional)')
+                        ->placeholder('Dikosongkan = sapaan default otomatis.'),
+                    Forms\Components\Repeater::make('chatbot_faq')->label('FAQ Usaha (opsional)')
+                        ->schema([
+                            Forms\Components\TextInput::make('q')->label('Pertanyaan')->required(),
+                            Forms\Components\Textarea::make('a')->label('Jawaban')->rows(2)->required(),
+                        ])
+                        ->collapsed()->itemLabel(fn (array $state): ?string => $state['q'] ?? null)
+                        ->addActionLabel('Tambah FAQ')->default([]),
+                ]),
         ]);
     }
 

@@ -139,8 +139,30 @@
   const token = form.querySelector('input[name="_token"]').value;
   const endpoint = @json(route('chat.send'));
 
+  // Konteks opsional (mode usaha per template). Di-set oleh halaman via window.__CW_CONFIG__.
+  const cfg = window.__CW_CONFIG__ || {};
+  const templateSlug = cfg.template || null;
+
   let history = [];
   let busy = false;
+
+  // Sesuaikan judul, sapaan, dan quick-reply bila mode usaha aktif.
+  if (cfg.title){ const el = panel.querySelector('.cw-title'); if(el) el.textContent = cfg.title; }
+  if (cfg.status){ const el = panel.querySelector('.cw-status'); if(el) el.innerHTML = '<i></i> ' + cfg.status; }
+  if (cfg.greetingTitle){ const el = panel.querySelector('.cw-hello h4'); if(el) el.textContent = cfg.greetingTitle; }
+  if (cfg.greeting){ const el = panel.querySelector('.cw-hello p'); if(el) el.innerHTML = cfg.greeting; }
+  if (Array.isArray(cfg.chips) && cfg.chips.length){
+    const wrap = panel.querySelector('.cw-chips');
+    if (wrap){
+      wrap.innerHTML = '';
+      cfg.chips.forEach(txt => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'cw-chip'; b.textContent = txt;
+        b.addEventListener('click', () => ask(txt));
+        wrap.appendChild(b);
+      });
+    }
+  }
 
   function open(){ root.classList.add('open'); panel.hidden = false; launcher.setAttribute('aria-expanded','true'); setTimeout(()=>input.focus(),120); }
   function close(){ root.classList.remove('open'); panel.hidden = true; launcher.setAttribute('aria-expanded','false'); }
@@ -180,7 +202,7 @@
       const res = await fetch(endpoint, {
         method:'POST',
         headers:{'Content-Type':'application/json','X-CSRF-TOKEN':token,'Accept':'application/json'},
-        body: JSON.stringify({ message, history: history.slice(-12) })
+        body: JSON.stringify({ message, template: templateSlug, history: history.slice(-12) })
       });
       typing(false);
       if(!res.ok) throw new Error('HTTP '+res.status);

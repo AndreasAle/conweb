@@ -11,5 +11,7 @@ class WebTemplate extends Model
     protected $casts = [
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
+        'chatbot_enabled' => 'boolean',
+        'chatbot_faq' => 'array',
     ];
 }
