@@ -83,6 +83,17 @@ class WebTemplateResource extends Resource
                         ])
                         ->collapsed()->itemLabel(fn (array $state): ?string => $state['q'] ?? null)
                         ->addActionLabel('Tambah FAQ')->default([]),
+
+                    Forms\Components\Placeholder::make('embed_snippet')
+                        ->label('📋 Kode Pasang (tempel di situs template ini)')
+                        ->content(fn (?WebTemplate $record) => $record
+                            ? new \Illuminate\Support\HtmlString(
+                                '<p style="margin-bottom:6px;color:#6b7280">Salin & tempel tepat sebelum <code>&lt;/body&gt;</code> di situs template <strong>'.e($record->name).'</strong>:</p>'
+                                .'<textarea readonly onclick="this.select()" style="width:100%;height:64px;font-family:monospace;font-size:12px;padding:10px;border:1px solid #d1d5db;border-radius:8px;background:#f9fafb">'
+                                .e('<script src="'.url('/embed/chatbot.js?t='.$record->slug).'" defer></script>')
+                                .'</textarea>')
+                            : 'Simpan template dulu, lalu kode pasang muncul di sini.')
+                        ->visibleOn('edit'),
                 ]),
         ]);
     }

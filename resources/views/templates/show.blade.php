@@ -10,27 +10,6 @@
     : ['Pengerjaan penuh oleh tim Conweb', 'Domain + hosting + SSL (1 tahun)', 'Responsif di semua perangkat', 'Optimasi SEO & kecepatan dasar', 'Konten disesuaikan dengan bisnismu', 'Pendampingan project sampai live'];
 @endphp
 
-@if($template->chatbot_enabled)
-@php
-  $bizName = $template->chatbot_business_name ?: $template->name;
-  $cwConfig = [
-    'template'      => $template->slug,
-    'title'         => $bizName,
-    'status'        => ($en ? 'Assistant ' : 'Asisten ').$bizName.' · online',
-    'greetingTitle' => ($en ? 'Hi! Welcome to ' : 'Hai! Selamat datang di ').$bizName.' 👋',
-    'greeting'      => $template->chatbot_greeting ?: ($en
-        ? 'Ask me anything about our products, prices, hours, or how to order.'
-        : 'Tanya apa saja soal produk, harga, jam buka, atau cara pesan ya.'),
-    'chips'         => $en
-        ? ['What do you offer?', 'What are the prices?', 'Opening hours?', 'How to order?']
-        : ['Ada produk/menu apa?', 'Berapa harganya?', 'Jam buka?', 'Cara pesan?'],
-  ];
-@endphp
-@push('chat-config')
-<script>window.__CW_CONFIG__ = {!! json_encode($cwConfig, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!};</script>
-@endpush
-@endif
-
 @push('styles')
 <style>
   .td-hero{position:relative;padding:calc(var(--nav-h) + 40px) 0 50px;overflow:hidden;

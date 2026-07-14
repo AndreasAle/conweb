@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'webhooks/xendit',
             'webhooks/doku',
+            'embed/chat', // chatbot embed dipasang di situs template (lintas-domain)
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

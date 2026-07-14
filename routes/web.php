@@ -59,6 +59,11 @@ Route::get('/komunitas', [CommunityController::class, 'index'])->name('community
 // ---- Chat Us — asisten AI Conweb ----
 Route::post('/chat-us', [ChatController::class, 'send'])->middleware('throttle:20,1')->name('chat.send');
 
+// ---- Chatbot embed untuk situs template (dipasang via <script>) ----
+Route::get('/embed/chatbot.js', [ChatController::class, 'embedScript'])->name('embed.script');
+Route::match(['post', 'options'], '/embed/chat', [ChatController::class, 'embedSend'])
+    ->middleware('throttle:30,1')->name('embed.chat');
+
 // ---- Auth (login / register / verifikasi OTP / Google) ----
 Route::middleware('guest')->group(function () {
     Route::get('/masuk', [AuthController::class, 'showLogin'])->name('login');
