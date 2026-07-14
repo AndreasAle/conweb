@@ -11,22 +11,23 @@
 @endphp
 
 @if($template->chatbot_enabled)
-@php $bizName = $template->chatbot_business_name ?: $template->name; @endphp
-@push('chat-config')
-<script>
-  window.__CW_CONFIG__ = {
-    template: @json($template->slug),
-    title: @json($bizName),
-    status: @json(($en ? 'Assistant' : 'Asisten').' '.$bizName.' · online'),
-    greetingTitle: @json(($en ? 'Hi! Welcome to ' : 'Hai! Selamat datang di ').$bizName.' 👋'),
-    greeting: @json($template->chatbot_greeting ?: ($en
+@php
+  $bizName = $template->chatbot_business_name ?: $template->name;
+  $cwConfig = [
+    'template'      => $template->slug,
+    'title'         => $bizName,
+    'status'        => ($en ? 'Assistant ' : 'Asisten ').$bizName.' · online',
+    'greetingTitle' => ($en ? 'Hi! Welcome to ' : 'Hai! Selamat datang di ').$bizName.' 👋',
+    'greeting'      => $template->chatbot_greeting ?: ($en
         ? 'Ask me anything about our products, prices, hours, or how to order.'
-        : 'Tanya apa saja soal produk, harga, jam buka, atau cara pesan ya.')),
-    chips: @json($en
+        : 'Tanya apa saja soal produk, harga, jam buka, atau cara pesan ya.'),
+    'chips'         => $en
         ? ['What do you offer?', 'What are the prices?', 'Opening hours?', 'How to order?']
-        : ['Ada produk/menu apa?', 'Berapa harganya?', 'Jam buka?', 'Cara pesan?'])
-  };
-</script>
+        : ['Ada produk/menu apa?', 'Berapa harganya?', 'Jam buka?', 'Cara pesan?'],
+  ];
+@endphp
+@push('chat-config')
+<script>window.__CW_CONFIG__ = {!! json_encode($cwConfig, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!};</script>
 @endpush
 @endif
 
